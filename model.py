@@ -23,8 +23,11 @@ def train_keras_model(X_train, Y_train):
     model.add(Activation("relu"))
     model.add(Dense(output_dim=10)) # Ti klasser
     model.add(Activation("softmax"))
+    
     # Compile model
-    model.compile(loss=euclidean_distance_loss, optimizer='sgd', metrics=['accuracy'])
+    model.compile(loss=euclidean_distance_loss, 
+                  optimizer='sgd', 
+                  metrics=['accuracy'])
     
     # Train the neural network
     model.fit(X_train, Y_train, nb_epoch=5, batch_size=32)
