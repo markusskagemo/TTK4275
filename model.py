@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers import Dense, Activation
+from keras.layers import Dense, Activation, Dropout
 import keras.backend as K
 #from utils import euclidean_distance_loss
 
@@ -16,12 +16,18 @@ def euclidean_distance_loss(y_true, y_pred):
 
 
 def train_keras_model(X_train, Y_train):
-    # Init keras model
     model = Sequential()
     # Specify model structure
-    model.add(Dense(output_dim=64, input_dim=100)) # > fiks parametre
+    model.add(Dense(units=32, input_dim=784)) # > fiks parametre
     model.add(Activation("relu"))
-    model.add(Dense(output_dim=10)) # Ti klasser
+    model.add(Dropout(0.2))
+    model.add(Dense(units=64))
+    model.add(Activation("relu"))
+    model.add(Dropout(0.2))
+    model.add(Dense(units=128))
+    model.add(Activation("relu"))
+    model.add(Dense(units=10)) # Ti klasser
+    model.add(Dropout(0.2))
     model.add(Activation("softmax"))
     
     # Compile model
@@ -30,6 +36,6 @@ def train_keras_model(X_train, Y_train):
                   metrics=['accuracy'])
     
     # Train the neural network
-    model.fit(X_train, Y_train, nb_epoch=5, batch_size=32)
+    model.fit(X_train, Y_train, epochs=5, batch_size=32)
     
     return model
