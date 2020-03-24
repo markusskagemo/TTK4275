@@ -25,12 +25,17 @@ def train_keras_ann(X_train, Y_train, n_epochs=10):
     model.add(Dropout(0.2))
     model.add(Dense(units=128))
     model.add(Activation("relu"))
-    model.add(Dense(units=10)) # Ti klasser
     model.add(Dropout(0.2))
+    model.add(Dense(units=10)) # Ti klasser
     model.add(Activation("softmax"))
     
     # Compile model
+    """
     model.compile(loss=euclidean_distance_loss, 
+                  optimizer='sgd', 
+                  metrics=['accuracy'])
+    """
+    model.compile(loss='categorical_crossentropy', 
                   optimizer='sgd', 
                   metrics=['accuracy'])
     
