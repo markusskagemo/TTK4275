@@ -13,7 +13,6 @@ examples written by 250 other persons.
 The task consists of two parts both using variants of a nearest neighbourhood classifier.
 
 ```
+pip install sklearn
 pip install python-mnist
-pip install tensorflow  
-pip install keras
 ```
