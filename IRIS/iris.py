@@ -2,17 +2,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 ## DEFINE
-train_start = 20
-train_end   = 50
-test_start  = 00
-test_end    = 20
+train_start = 00
+train_end   = 30
+test_start  = 30
+test_end    = 50
 
 ## TUNE
 alpha       = 0.01
-NUM_ITER    = 1000
+NUM_ITER    = 5000
 
 ## CHOOSE FEATURES
-features = np.array([0,1,2,3])
+features = np.array([2])
+# 0 : Sepal length    - 2nd most overlap
+# 1 : Sepal width     -     most overlap
+# 2 : Petal length    - 3rd most overlap
+# 3 : Petal width     -    least overlap
 
 ################################################################################
 # Import class data
