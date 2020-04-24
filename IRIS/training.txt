@@ -1,0 +1,17 @@
+#~ Training
+for i in range(NUM_ITER):
+  W_prev      = W
+  grad_mse    = np.zeros((C, D+1))
+
+  for k in range(N):
+    for (c, tk) in zip(training, t_k):
+      xk          = np.append(c[k], 1)
+      xk          = xk.reshape(D+1, 1)
+      zk          = W@xk
+      gk          = sigmoid(zk)
+      temp        = np.multiply(gk-tk, gk)
+      temp        = np.multiply(temp, np.ones((C,1))-gk)
+      grad_mse    += temp@xk.T
+
+  norm_grad   = np.linalg.norm(grad_mse)
+  W           = W_prev - alpha*grad_mse

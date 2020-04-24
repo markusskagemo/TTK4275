@@ -2,21 +2,17 @@ import numpy                as np
 import matplotlib.pyplot    as plt
 
 ## DEFINE
-train_start = 20
-train_end   = 50
-test_start  = 00
-test_end    = 20
+train_start = 00
+train_end   = 30
+test_start  = 30
+test_end    = 50
 
 ## TUNE
 alpha       = 0.01
 NUM_ITER    = 5000
 
 ## CHOOSE FEATURES
-features = np.array([0,1,2,3])
-# 0 : Sepal length    - 2nd most overlap
-# 1 : Sepal width     -     most overlap
-# 2 : Petal length    - 3rd most overlap
-# 3 : Petal width     -    least overlap
+features = np.array([2])
 
 ################################################################################
 # Import class data
@@ -46,15 +42,15 @@ class_3 = np.array(class_3)
 training_1 = class_1[train_start : train_end, features]
 training_2 = class_2[train_start : train_end, features]
 training_3 = class_3[train_start : train_end, features]
-training   = [training_1, training_2, training_3]
+testing_1  = class_1[test_start : test_end, features]
+testing_2  = class_2[test_start : test_end, features]
+testing_3  = class_3[test_start : test_end, features]
 
-testing_1  = class_1[test_start  : test_end,  features]
-testing_2  = class_2[test_start  : test_end,  features]
-testing_3  = class_3[test_start  : test_end,  features]
-testing    = [testing_1,  testing_2,  testing_3 ]
+# train a linear classifier, and tune step factor until training converges.
+training = [training_1, training_2, training_3]
+testing  = [testing_1, testing_2, testing_3]
 
 ################################################################################
-
 def sigmoid(X): # X = W_k*x_ik
     return 1/(1 + np.exp(-X))
 
@@ -77,8 +73,9 @@ t_k2 = np.array([[0],[1],[0]]) #class2
 t_k3 = np.array([[0],[0],[1]]) #class3
 t_k  = [t_k1, t_k2, t_k3]
 
-#~ Training
-for i in range(NUM_ITER):
+
+#training
+for m in range(NUM_ITER):
     W_prev      = W
     grad_mse    = np.zeros((C, D+1))
 
@@ -94,22 +91,10 @@ for i in range(NUM_ITER):
 
     norm_grad   = np.linalg.norm(grad_mse)
     W           = W_prev - alpha*grad_mse
+
 np.savetxt('w.txt', W)
 
-#~ Training - confusion matrix
-confusion = np.zeros((3,3))
-for k in range(N):
-    i = 0
-    for c in training: #c = 0, 1,
-        g       = W@np.append(c[k], 1)
-        g       = g.reshape(C, 1)
-        label   = np.argmax(g, axis=0)  # what we think it is
-        confusion[i, label] += 1
-        i                   += 1
-np.savetxt('confusion_training.txt', confusion)
-print("TRAINING:  \n", confusion)
-
-#~ Testing
+#testing
 confusion = np.zeros((3,3))
 for k in range(M):
     i = 0
@@ -119,10 +104,10 @@ for k in range(M):
         label   = np.argmax(g, axis=0)  # what we think it is
         confusion[i, label] += 1
         i                   += 1
-np.savetxt('confusion.txt', confusion)
-print("TESTING: \n", confusion)
 
-#~ Error rate:
+np.savetxt('confusion.txt', confusion)
+
+#error rate:
 def error_rate(confusion):
     errors      = 0
     num_samples = 0
@@ -133,73 +118,9 @@ def error_rate(confusion):
             num_samples += confusion[i][j]
     return errors/num_samples
 
-
-################################################################################
-
-def feature_name(f):
-    if f == 0: return "sepal length"
-    if f == 1: return "sepal width"
-    if f == 2: return "petal length"
-    if f == 3: return "petal width"
-
-# plot histograms
-def plot_histograms():
-    for f in features:
-        plt.figure(f)
-        plt.hist(class_1[:,f], alpha=0.5, label = "Setosa")
-        plt.hist(class_2[:,f], alpha=0.5, label = "Versicolour")
-        plt.hist(class_3[:,f], alpha=0.5, label = "Virginica")
-        plt.legend()
-        plt.grid()
-        plt.title(feature_name(f))
-
-
-# plot the training samples' width/length against each other
-def plot_training_samples():
-    #plot 1 - sepal - x:length, y:width
-    sepal_1 = training_1[:,:2]
-    sepal_2 = training_2[:,:2]
-    sepal_3 = training_3[:,:2]
-    x1, y1  = sepal_1.T
-    x2, y2  = sepal_2.T
-    x3, y3  = sepal_3.T
-
-    plt.figure(8)
-    plt.scatter(x1,y1, label="Setosa")
-    plt.scatter(x2,y2, label="Versicolour")
-    plt.scatter(x3,y3, label="Virginica")
-    plt.legend()
-    plt.xlabel("sepal length")
-    plt.ylabel("sepal width")
-    plt.grid()
-
-    #plot 2 - petal - x:length, y:width
-    petal_1 = training_1[:,2:]
-    petal_2 = training_2[:,2:]
-    petal_3 = training_3[:,2:]
-    x1, y1  = petal_1.T
-    x2, y2  = petal_2.T
-    x3, y3  = petal_3.T
-
-    plt.figure(9)
-    plt.scatter(x1,y1, label="Setosa")
-    plt.scatter(x2,y2, label="Versicolour")
-    plt.scatter(x3,y3, label="Virginica")
-    plt.legend()
-    plt.xlabel("petal length")
-    plt.ylabel("petal width")
-    plt.grid()
-
-    return
-
-
 ###############################################################################
 
 if __name__== "__main__" :
     print("main. ")
-    #print(confusion)
+    print(confusion)
     print("error rate: ", error_rate(confusion))
-
-    #plot_histograms()
-    #plot_training_samples()
-    #plt.show()
