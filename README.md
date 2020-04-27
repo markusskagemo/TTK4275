@@ -6,8 +6,9 @@ pip install sklearn
 pip install python-mnist
 pip install seaborn
 ```
-### On Jupyter notebook requirements
-Note that OSX and Linux might use ```pip3 install```, depending on your Python environment setup.
+Note that OSX and Linux might use ```pip3 install```, depending on your Python environment setup.  
+
+#### On Jupyter notebook requirements
 If you do not have jupyter notebook or jupyter lab installed, install by
 ```
 pip install jupyterlab
