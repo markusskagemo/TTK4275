@@ -1,4 +1,5 @@
-## Classification, Estimation and Detection project  
+## Estimation, Detection and Classification project  
+Group 59, Jakob Eide Grepperud and Markus Skagemo
 ### Installation  
 ```
 pip install sklearn
